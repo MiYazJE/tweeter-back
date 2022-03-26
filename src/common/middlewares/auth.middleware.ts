@@ -14,7 +14,7 @@ export class AuthMiddleware implements NestMiddleware {
     if (!authorization) {
       throw new HttpException(
         'No authorization token provided',
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.FORBIDDEN,
       );
     }
 

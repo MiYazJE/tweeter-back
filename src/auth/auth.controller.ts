@@ -1,37 +1,29 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { CreateUserDto } from './auth.dto';
+import { SignupDto } from './dto/auth.dto';
 import { AuthService } from './auth.service';
+import { SignInDto } from './dto/signin.dto';
 
 @Controller('auth')
-@UsePipes(
-  new ValidationPipe({
-    whitelist: true,
-    transform: true,
-  }),
-)
 @ApiTags('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('signup')
   @ApiOperation({ description: 'Register a user for Tweeter app usage' })
-  @HttpCode(HttpStatus.ACCEPTED)
-  signup(@Body() userDto: CreateUserDto) {
+  @HttpCode(HttpStatus.CREATED)
+  signup(@Body() userDto: SignupDto) {
     return this.authService.signup(userDto);
   }
 
   @Post('signin')
-  signin() {
-    return this.authService.signin();
+  @ApiOperation({
+    description:
+      'Authenticate a user by username or email and retrieves an access_token',
+  })
+  @HttpCode(HttpStatus.OK)
+  signin(@Body() signInDto: SignInDto) {
+    return this.authService.signin(signInDto);
   }
 }
